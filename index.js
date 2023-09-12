@@ -66,11 +66,13 @@ export const abortPromisesQueue = (api, batch = false, delay = 1000) => {
         inputQueue,
         outputQueue,
         abortQueue: () => {
-            let abortQueue = queue
+            let abortPromises = queue
             queue = []
             kill = true
-            abortQueue.forEach((item) => {
-                item.result.controller.abort()
+            abortPromises.forEach((item) => {
+                if (item?.result?.controller) {
+                    item.result.controller.abort()
+                }
             })
         },
         closeQueue: () => {

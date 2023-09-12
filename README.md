@@ -8,19 +8,19 @@ Output queue returns an object `{ config, data, error }`
 
 # Install
 
-`npm install --save @nasimhuq/queue-of-promises`
+`npm install --save @nasimhuq/abort-promises-queue`
 
 # Typical usage
 
 Require as **CJS**
 
 ```js
-const queueOfPromises = require('@nasimhuq/queue-of-promises');
+const abortPromiseQueue = require('@nasimhuq/abort-promises-queue');
 ```
 
 Import as **ES6 Module**
 ```js
-import queueOfPromises from '@nasimhuq/queue-of-promises';
+import abortPromiseQueue from '@nasimhuq/abort-promises-queue';
 ```
 
 # Examples
@@ -28,18 +28,18 @@ import queueOfPromises from '@nasimhuq/queue-of-promises';
 Example 1: Single batch of requests
 
 ```js
-import queueOfPromises from '@nasimhuq/queue-of-promises'
+import abortPromisesQueue from '@nasimhuq/abort-promise-queue'
 
-const api = (config) => {
+const api = (url, config) => {
     return new Promise((resolve, reject) => {
-        const { output } = config
+        // const { output } = config
         setTimeout(() => {
-            if (output.reject) {
-                reject(output)
+            if (config.reject) {
+                reject(config)
             } else {
-                resolve(output)
+                resolve(config)
             }
-        }, output.duration)
+        }, config.duration)
     })
 }
 
@@ -47,54 +47,83 @@ const multi = 1000
 
 const reqConfigList = [
     {
-        output: {
+        url: 'First.com',
+        config: {
             key: 'First',
             duration: 1000 + multi,
         },
     },
     {
-        output: {
+        url: 'Second.com',
+        config: {
             key: 'Second',
             duration: 500 + multi,
         },
     },
     {
-        output: {
+        url: 'Third.com',
+        config: {
             key: 'Third',
             duration: 1300,
             reject: true,
         },
     },
     {
-        output: {
+        url: 'Fourth.com',
+        config: {
             key: 'Fourth',
             duration: 1300 + multi * 2,
             reject: true,
         },
     },
     {
-        output: {
+        url: 'Fifth.com',
+        config: {
             key: 'Fifth',
             duration: 1000 + multi * 3,
             reject: true,
         },
     },
     {
-        output: {
+        url: 'Sixth.com',
+        config: {
             key: 'Sixth',
             duration: 900 + multi,
         },
     },
     {
-        output: {
+        url: 'Seventh.com',
+        config: {
             key: 'Seventh',
             duration: 700 + multi,
         },
     },
 ]
 
+const test_abort_queue = async (resolve) => {
+    const { inputQueue, outputQueue, abortQueue } = abortPromisesQueue(api)
+    reqConfigList.forEach((config) => {
+        inputQueue.next(config)
+    })
+    const start = Date.now()
+    try {
+        for await (const res of outputQueue) {
+            console.log(res)
+            if (res.error) {
+                abortQueue()
+            }
+            const end = Date.now()
+            console.log('duration: ', end - start)
+        }
+    } catch (e) {
+        console.log('something went wrong!', e)
+    }
+    console.log('finished')
+    resolve() // this resolve is used for display purpose only
+}
+
 const test_single_batch = async (resolve) => {
-    const { inputQueue, outputQueue } = queueOfPromises(api)
+    const { inputQueue, outputQueue } = abortPromisesQueue(api)
     reqConfigList.forEach((config) => {
         inputQueue.next(config)
     })
@@ -112,8 +141,14 @@ const test_single_batch = async (resolve) => {
     resolve() // this resolve is used for display purpose only
 }
 
+
+
 const test_multiple_batches = async (resolve) => {
-    const { inputQueue, outputQueue, closeQueue } = queueOfPromises(api, true, 500)
+    const { inputQueue, outputQueue, closeQueue } = abortPromisesQueue(
+        api,
+        true,
+        500
+    )
     inputQueue.next(reqConfigList[0])
     inputQueue.next(reqConfigList[1])
     inputQueue.next(reqConfigList[2])
@@ -146,7 +181,7 @@ const test_multiple_batches = async (resolve) => {
 
 const test_multiple_batches_promise = async () => {
     return new Promise(async (resolve) => {
-        test_multiple_batches(resolve);
+        test_multiple_batches(resolve)
     })
 }
 
@@ -156,7 +191,14 @@ const test_single_batch_promise = async () => {
     })
 }
 
+const test_abort_queue_promise = async () => {
+    return new Promise(async (resolve) => {
+        test_abort_queue(resolve)
+    })
+}
 const allTests = async () => {
+    console.log('------------------- abort queue ---------------------------')
+    await test_abort_queue_promise()
     console.log('---------------------- single batch -------------------------')
     await test_single_batch_promise()
     console.log('------------------------multiple batches ------------------')
@@ -164,8 +206,7 @@ const allTests = async () => {
 }
 
 allTests()
-
 ```
 
-# queue-of-promises can be used in node.js
+# abort-promises-queue can be used in node.js
 
