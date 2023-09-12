@@ -1,4 +1,4 @@
-# abort-promises-queue
+# abort-promise-queue
 **Queue of promises. All promises are executed concurrently as they are added to the input queue. Regardless of which promise resolved earlier, output queue will always keep the order it was executed**
 
 Output queue returns an object `{ config, data, error }`
