@@ -8,19 +8,19 @@ Output queue returns an object `{ config, data, error }`
 
 # Install
 
-`npm install --save @nasimhuq/abort-promises-queue`
+`npm install --save @nasimhuq/abort-promise-queue`
 
 # Typical usage
 
 Require as **CJS**
 
 ```js
-const abortPromiseQueue = require('@nasimhuq/abort-promises-queue');
+const abortPromiseQueue = require('@nasimhuq/abort-promise-queue');
 ```
 
 Import as **ES6 Module**
 ```js
-import abortPromiseQueue from '@nasimhuq/abort-promises-queue';
+import abortPromiseQueue from '@nasimhuq/abort-promise-queue';
 ```
 
 # Examples
