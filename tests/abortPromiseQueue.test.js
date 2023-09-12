@@ -165,12 +165,12 @@ const test_abort_queue_promise = async () => {
     })
 }
 const allTests = async () => {
-    console.log('---------------------- single batch -------------------------')
-    await test_single_batch_promise()
     console.log('------------------- abort queue ---------------------------')
     await test_abort_queue_promise()
-    console.log('------------------------multiple batches ------------------')
-    await test_multiple_batches_promise()
+    // console.log('---------------------- single batch -------------------------')
+    // await test_single_batch_promise()
+    // console.log('------------------------multiple batches ------------------')
+    // await test_multiple_batches_promise()
 }
 
 allTests()

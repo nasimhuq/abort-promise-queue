@@ -20,7 +20,7 @@ export const abortPromisesQueue = (api, batch = false, delay = 1000) => {
             const config = originalConfig.config
             const controller = new AbortController()
             const signal = controller.signal
-            const result = { config, url, controller }
+            const result = { config: originalConfig, controller }
             if (config) {
                 const promise = api(url, { signal, ...config }).catch((e) => {
                     result.error = e
