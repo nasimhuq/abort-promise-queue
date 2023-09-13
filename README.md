@@ -28,11 +28,10 @@ import abortPromiseQueue from '@nasimhuq/abort-promise-queue';
 Example 1: Single batch of requests
 
 ```js
-import abortPromisesQueue from '@nasimhuq/abort-promise-queue'
+import abortPromiseQueue from '@nasimhuq/abort-promise-queue'
 
 const api = (url, config) => {
     return new Promise((resolve, reject) => {
-        // const { output } = config
         setTimeout(() => {
             if (config.reject) {
                 reject(config)
@@ -101,7 +100,7 @@ const reqConfigList = [
 ]
 
 const test_abort_queue = async (resolve) => {
-    const { inputQueue, outputQueue, abortQueue } = abortPromisesQueue(api)
+    const { inputQueue, outputQueue, abortQueue } = abortPromiseQueue(api)
     reqConfigList.forEach((config) => {
         inputQueue.next(config)
     })
@@ -123,7 +122,7 @@ const test_abort_queue = async (resolve) => {
 }
 
 const test_single_batch = async (resolve) => {
-    const { inputQueue, outputQueue } = abortPromisesQueue(api)
+    const { inputQueue, outputQueue } = abortPromiseQueue(api)
     reqConfigList.forEach((config) => {
         inputQueue.next(config)
     })
@@ -144,7 +143,7 @@ const test_single_batch = async (resolve) => {
 
 
 const test_multiple_batches = async (resolve) => {
-    const { inputQueue, outputQueue, closeQueue } = abortPromisesQueue(
+    const { inputQueue, outputQueue, closeQueue } = abortPromiseQueue(
         api,
         true,
         500
@@ -208,5 +207,5 @@ const allTests = async () => {
 allTests()
 ```
 
-# abort-promises-queue can be used in node.js
+# abort-promise-queue can be used in node.js
 
