@@ -15,7 +15,7 @@ Output queue returns an object `{ config, data, error }`
 Require as **CJS**
 
 ```js
-const abortPromiseQueue = require('@nasimhuq/abort-promise-queue');
+const CreatePromiseQueue = require('@nasimhuq/abort-promise-queue');
 ```
 
 Import as **ES6 Module**
