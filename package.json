@@ -1,11 +1,11 @@
 {
   "name": "@nasimhuq/abort-promise-queue",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Queue of abortable promises",
   "main": "./src/index.js",
   "type": "module",
   "scripts": {
-    "build": "esbuild ./src/index.js --bundle --minify --target=chrome58,firefox57,safari11,edge16 --outfile=des/queue-of-promises.js",
+    "build": "esbuild ./src/index.js --bundle --minify --target=es6 --outfile=des/queue-of-promises.js",
     "test": "node tests/abortPromiseQueue.test.js"
   },
   "repository": {
