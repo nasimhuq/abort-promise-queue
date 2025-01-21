@@ -1,6 +1,6 @@
 {
   "name": "@nasimhuq/abort-promise-queue",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Queue of abortable promises",
   "main": "./src/index.js",
   "type": "module",
@@ -23,11 +23,11 @@
   "bugs": {
     "url": "https://github.com/nasimhuq/abort-promise-queue/issues"
   },
-  "devDependencies": {
-    "esbuild": "^0.19.2"
-  },
   "engines": {
     "node": ">= 16.0.0"
   },
-  "homepage": "https://github.com/nasimhuq/abort-promise-queue#readme"
+  "homepage": "https://github.com/nasimhuq/abort-promise-queue#readme",
+  "devDependencies": {
+    "esbuild": "^0.24.2"
+  }
 }
