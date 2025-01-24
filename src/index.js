@@ -13,12 +13,6 @@ export function createPromiseQueue() {
         api = customApi
     }
 
-    const listHasValueFn = (resolve) => (unsubscribe) => () => {
-        if (list.value.length > 0) {
-            unsubscribe()
-            resolve(true)
-        }
-    }
     const addToQueue = (item) => {
         if (isTerminated()) {
             throw new Error('Error: Cannot add item to terminated queue!')
@@ -41,6 +35,7 @@ export function createPromiseQueue() {
                 list.value.forEach(({ allOptions }) => {
                     allOptions.config._controller.abort()
                 })
+                list.unsubscribeAll()
                 resolve(true)
                 return
             }
@@ -48,18 +43,26 @@ export function createPromiseQueue() {
                 resolve(true)
                 return
             }
-            const listHasValue = listHasValueFn(resolve)
-            const hasValue = listHasValue(() => list.unsubscribe(listHasValue))
-            list.subscribe(hasValue)
+            const removeSubscription = {}
+            const listHasValue = () => {
+                resolve(true)
+                removeSubscription?.['unsubscribeListHasValue']()
+            }
+            removeSubscription['unsubscribeListHasValue'] = () => {
+                list.unsubscribe(listHasValue)
+            }
+            list.subscribe(listHasValue)
         })
     }
     async function* promiseQueueGenerator() {
         while (true) {
-            if (_terminated) return { done: true }
+            if (isTerminated()) {
+                list.unsubscribeAll()
+                return { done: true }
+            }
             const response = await list.value.shift().promise
             yield response
             await waitForListToFillUp()
-            list.unsubscribeAll() // no need to observe list at this time
         }
     }
     return {

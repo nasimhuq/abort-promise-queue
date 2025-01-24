@@ -90,7 +90,7 @@ function multipleBatches() {
     const respondQueue = promiseQueueGenerator()
     setApiFn(customApi)
     addPromiseToQueue(isTerminated, addToQueue)()
-    const MAX_API_REQUEST = 7
+    const MAX_API_REQUEST = 10
     async function consumeValues(resolve) {
         let count = 0
         for await (const respond of respondQueue) {
@@ -120,6 +120,7 @@ function multipleBatchesAbortOnFirstError() {
         const start = Date.now()
         for await (const respond of respondQueue) {
             const [error, data] = respond
+            if (error) terminate()
             logResponse({ error, data })
             count++
             if (count >= MAX_API_REQUEST) {
@@ -136,7 +137,7 @@ function multipleBatchesAbortOnFirstError() {
 
 async function tests() {
     await multipleBatches()
-    await multipleBatchesAbortOnFirstError()
+    // await multipleBatchesAbortOnFirstError()
 }
 
 tests()

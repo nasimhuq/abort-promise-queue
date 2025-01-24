@@ -21,7 +21,6 @@ export function observableArray(array) {
                 return () => {
                     const result = target[property]()
                     notifyListeners()
-
                     return result
                 }
             }
@@ -38,7 +37,7 @@ export function observableArray(array) {
         listeners.add(listener)
     }
     function unsubscribeAll() {
-        while (listeners.length) listeners.pop()
+        listeners.clear()
     }
     function unsubscribe(listener) {
         listeners.delete(listener)
